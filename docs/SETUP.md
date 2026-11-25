@@ -26,3 +26,8 @@ the Nucleo's ST-LINK USB drive (`NOD_H533RE`), which flashes the board. No OpenO
 Edit the `JETSON` value in `.vscode/tasks.json` to use the VS Code task.
 
 `docs/reference/h5-latest.ioc` is the team's custom BMS board (STM32H523CE) CubeMX file, kept for reference only. It is not built.
+
+**micro-ROS library (from m3 on):** after cloning, run `git submodule update --init`, start Docker Desktop, then
+`.\scripts\build_microros.ps1` once (a few minutes). It produces
+`bms_h5/micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/` (not committed: it's a 10 MB build output).
+`bms_h5/Makefile` only exists to hand the MCU flags to that builder; the real build is CMake.
