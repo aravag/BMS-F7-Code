@@ -1,0 +1,13 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    { "label": "Build (Debug)", "type": "shell", "group": { "kind": "build", "isDefault": true },
+      "command": "powershell -NoProfile -ExecutionPolicy Bypass -File ${workspaceFolder}/scripts/build.ps1 Debug",
+      "problemMatcher": "$gcc" },
+    { "label": "Flash (laptop)", "type": "shell", "dependsOn": "Build (Debug)",
+      "command": "powershell -NoProfile -ExecutionPolicy Bypass -File ${workspaceFolder}/scripts/flash_local.ps1 Debug" },
+    { "label": "Deploy to Jetson", "type": "shell", "dependsOn": "Build (Debug)",
+      "command": "bash ${workspaceFolder}/scripts/deploy_jetson.sh Debug",
+      "options": { "env": { "JETSON": "CHANGE_ME@100.92.239.43" } } }
+  ]
+}
