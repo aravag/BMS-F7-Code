@@ -34,3 +34,8 @@ If the drive shows a `FAIL.TXT` afterwards, read it (`cat /mnt/nucleo/FAIL.TXT` 
 - On the Jetson: `screen /dev/ttyACM0 115200` shows `BMS H5 alive 0`, `1`, `2`, ... once per second.
   (Quit screen: Ctrl+A then K then Y.)
 - [ ] Pass
+
+## m2-freertos
+- LD2 toggles every 0.25 s (faster than m1), driven by one FreeRTOS task.
+- `screen /dev/ttyACM0 115200` shows `BMS H5 alive N (FreeRTOS)` once per second, from a second task.
+- [ ] Pass
