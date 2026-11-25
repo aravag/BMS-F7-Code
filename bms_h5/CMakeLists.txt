@@ -46,12 +46,18 @@ target_link_directories(${CMAKE_PROJECT_NAME} PRIVATE
 target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     # Add user sources here
     App/app.c
+    App/ros_node.c
+    micro_ros_stm32cubemx_utils/extra_sources/custom_memory_manager.c
+    micro_ros_stm32cubemx_utils/extra_sources/microros_allocators.c
+    micro_ros_stm32cubemx_utils/extra_sources/microros_time.c
+    micro_ros_stm32cubemx_utils/extra_sources/microros_transports/it_transport.c
 )
 
 # Add include paths
 target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
     # Add user defined include paths
     App
+    micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include
 )
 
 # Add project symbols (macros)
@@ -67,4 +73,10 @@ target_link_libraries(${CMAKE_PROJECT_NAME}
     stm32cubemx
 
     # Add user defined libraries
+    ${CMAKE_SOURCE_DIR}/micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/libmicroros.a
 )
+
+# microros_time.c expects cmsis_os.h to pull in FreeRTOS's task.h (true for CubeMX's built-in FreeRTOS,
+# not for X-CUBE-FREERTOS on H5). Force-include them for that file instead of editing the submodule.
+set_source_files_properties(micro_ros_stm32cubemx_utils/extra_sources/microros_time.c
+    PROPERTIES COMPILE_OPTIONS "-include;FreeRTOS.h;-include;task.h")

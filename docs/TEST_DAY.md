@@ -39,3 +39,23 @@ If the drive shows a `FAIL.TXT` afterwards, read it (`cat /mnt/nucleo/FAIL.TXT` 
 - LD2 toggles every 0.25 s (faster than m1), driven by one FreeRTOS task.
 - `screen /dev/ttyACM0 115200` shows `BMS H5 alive N (FreeRTOS)` once per second, from a second task.
 - [ ] Pass
+
+## m3-microros-hello
+From here on, USART2 carries micro-ROS traffic, so **do not open `screen`** on `/dev/ttyACM0` (it would steal the port from the agent).
+LD2: **solid on** = waiting for the agent, **toggling every 1 s** = publishing, **fast blink** = micro-ROS setup failed.
+
+Terminal 1 on the Jetson (agent):
+```bash
+docker run -it --rm --net=host --device=/dev/ttyACM0 microros/micro-ros-agent:humble serial --dev /dev/ttyACM0 -b 115200 -v4
+```
+You should see `session established` within a few seconds, and LD2 starts toggling.
+
+Terminal 2 on the Jetson:
+```bash
+source /opt/ros/humble/setup.bash
+ros2 node list                    # shows /bms_node
+ros2 topic echo /bms/heartbeat    # data: 1, 2, 3 ... once per second
+```
+If nothing shows, press the Nucleo's black RESET button once with the agent already running
+(m3 has no reconnect logic; m4 does).
+- [ ] Pass
