@@ -59,3 +59,24 @@ ros2 topic echo /bms/heartbeat    # data: 1, 2, 3 ... once per second
 If nothing shows, press the Nucleo's black RESET button once with the agent already running
 (m3 has no reconnect logic; m4 does).
 - [ ] Pass
+
+## m4-bms-node (the deliverable)
+LD2: **slow blink** (0.5 s) = looking for the agent; **fast blink** (0.1 s) = micro-ROS setup failed, retrying;
+**connected** = LED shows the output-enable command (starts **on**).
+
+Start the agent as in m3. Then in a second terminal:
+```bash
+source /opt/ros/humble/setup.bash
+ros2 node list                                  # /bms_node
+ros2 topic list                                 # /bms/battery_state, /bms/cmd_output_enable
+ros2 topic echo /bms/battery_state              # voltage ~16.8 -> 14.0 V over ~1 min, 4 cell_voltage values, percentage falling
+ros2 topic hz /bms/battery_state                # ~1.0 Hz
+ros2 topic pub --once /bms/cmd_output_enable std_msgs/msg/Bool "{data: false}"   # LD2 off
+ros2 topic pub --once /bms/cmd_output_enable std_msgs/msg/Bool "{data: true}"    # LD2 on
+```
+Reconnect test: Ctrl+C the agent → within ~1 s LD2 starts slow-blinking. Start the agent again → LD2 goes steady
+and `ros2 topic echo` resumes, **without** pressing reset.
+
+The battery data is **fake** (simulated 4S pack, 5 A discharge, sped up 60x). The real MAX17205 replaces
+`bms_h5/App/battery_source_fake.c` later; nothing else changes.
+- [ ] Pass

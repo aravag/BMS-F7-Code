@@ -47,6 +47,8 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     # Add user sources here
     App/app.c
     App/ros_node.c
+    App/bms_data.c
+    App/battery_source_fake.c
     micro_ros_stm32cubemx_utils/extra_sources/custom_memory_manager.c
     micro_ros_stm32cubemx_utils/extra_sources/microros_allocators.c
     micro_ros_stm32cubemx_utils/extra_sources/microros_time.c
